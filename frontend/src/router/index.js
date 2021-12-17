@@ -8,9 +8,9 @@ const routes = [
     component: Signin
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: () => import('../components/Home/Home.vue')
+    path: '/index/user',
+    name: 'User',
+    component: () => import('../components/User/User.vue')
   },
   {
     path: '/:pathMatch(.*)',

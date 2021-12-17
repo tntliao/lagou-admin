@@ -1,5 +1,10 @@
+const { public } = require('../utils/tools')
+
 const auth = (req, res, next) => {
-    if (req.cookies.username) {
+    const token = req.headers.token || ''
+    const result = public(token)
+
+    if (result.username) {
         next()
     } else {
         res.send({

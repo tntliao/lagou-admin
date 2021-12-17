@@ -30,7 +30,6 @@ import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { ElMessage } from "element-plus";
-
 export default {
   name: "Signin",
   setup() {
@@ -46,7 +45,9 @@ export default {
         .post("http://localhost:3000/api/users/login", { ...signinInfo })
         .then((response) => {
           if (response.data.code) {
-            router.push("/home");
+            const token = response.headers["x-assess-token"];
+            localStorage.setItem("token", token);
+            router.push("/index/user");
             ElMessage({
               message: response.data.message,
               type: "success",

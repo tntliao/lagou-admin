@@ -1,10 +1,10 @@
 const express = require('express')
 const { auth } = require('../middlewares/auth')
-const router = express.Router()
+const router = express.Router() 
 const { addUser, getList, login, deleteUser, exitLogin, isAuth } = require('../controllers/users')
 
 
-router.post('/adduser', addUser)
+router.post('/adduser', auth, addUser)
 router.get('/getlist', auth, getList)
 router.post('/login', login)
 router.delete('/delete', auth, deleteUser)

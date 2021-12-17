@@ -14,24 +14,28 @@ export default {
   setup() {
     const router = useRouter();
     const exitLogin = () => {
-      axios
-        .get("http://localhost:3000/api/users/exitlogin")
-        .then((response) => {
-          if (response.data.code) {
-            router.back();
-            ElMessage({
-              message: response.data.message,
-              type: "success",
-              center: true,
-            });
-          } else {
-            ElMessage({
-              message: "退出失败，请检查当前网络...",
-              type: "warning",
-              center: true,
-            });
-          }
-        });
+      const token = localStorage.getItem("token");
+      localStorage.removeItem("token");
+      axios({
+        headers: { token },
+        method: "get",
+        url: "http://localhost:3000/api/users/exitlogin",
+      }).then((response) => {
+        if (response.data.code) {
+          router.back();
+          ElMessage({
+            message: response.data.message,
+            type: "success",
+            center: true,
+          });
+        } else {
+          ElMessage({
+            message: "退出失败，请检查当前网络...",
+            type: "warning",
+            center: true,
+          });
+        }
+      });
     };
     return {
       exitLogin,

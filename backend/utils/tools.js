@@ -30,22 +30,25 @@ const decrypt = (password, hash) => {
 }
 
 
-/* 私钥生成公钥 */
-// 私钥
+//加密
 const private = (username) => {
     const privateKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_private_key.pem'))
-    const token = jwt.sign({ username }, privateKey, { algorithm: 'RS256' })
+    const token = jwt.sign({ username }, privateKey, { algorithm: 'HS256' })
     console.log(token)
     return token
 }
 
-// 公钥
+// 解密
 const public = (token) => {
-    const publicKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_public_key.pem'))
-    const result = jwt.verify(token, publicKey)
-    return result
+    if (token) {
+        const publicKey = fs.readFileSync(path.join(__dirname, '../keys/rsa_private_key.pem'))
+        const result = jwt.verify(token, publicKey)
+        return result
+    } else {
+        return { username: '' }
+    }
+
 }
-private('asdasdsad')
 
 exports.encryption = encryption
 exports.decrypt = decrypt

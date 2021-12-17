@@ -1,5 +1,6 @@
 const userModel = require('../models/users')
-const { encryption, decrypt } = require('../utils/tools')
+const { encryption, decrypt, private } = require('../utils/tools')
+const { public } = require('../utils/tools')
 
 // 添加用户
 const addUser = async (req, res, next) => {
@@ -28,7 +29,6 @@ const addUser = async (req, res, next) => {
 }
 // 获取用户列表
 const getList = async (req, res, next) => {
-    console.log(req);
     res.set('content-type', 'application/json')
     const list = await userModel.getUserList()
     res.send({
@@ -45,14 +45,17 @@ const login = async (req, res, next) => {
         const flag = await decrypt(password, findInfo.password)
         if (flag) {
             //设置cookie
-            res.set('Set-Cookie', `username=${username}; Path=/; HttpOnly`)
+            // res.set('Set-Cookie', `username=${username}; Path=/; HttpOnly`)
             //删除cookie
             // res.clearCookie('username')
+
+            const token = private(username)
+            res.set('Access-Control-Expose-Headers', 'X-Assess-Token')
+            res.set('X-Assess-Token', token)
 
             res.send({
                 code: 1,
                 message: `登录成功，欢迎${username}`,
-                // loken
             })
         } else {
             res.send({
@@ -71,10 +74,8 @@ const login = async (req, res, next) => {
 }
 //删除用户
 const deleteUser = async (req, res, next) => {
-    console.log(req);
     const { id } = req.body
     const result = await userModel.removeUser(id)
-    console.log(result);
     if (result) {
         res.send({
             code: 1,
@@ -97,7 +98,9 @@ const exitLogin = (req, res, next) => {
 }
 //检查有没有登录
 const isAuth = (req, res, next) => {
-    if (req.cookies.username) {
+    const token = req.headers.token || ''
+    const result = public(token)
+    if (result.username) {
         res.send({
             code: 1,
             message: '当前已登录'
