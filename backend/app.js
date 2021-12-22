@@ -6,11 +6,12 @@ const logger = require('morgan')
 const cors = require('cors')
 
 const usersRouter = require('./routes/users')
+const positionsRouter = require('./routes/positions')
 
 const app = express()
 
 app.use(cors({
-  origin: true, 
+  origin: true,
   credentials: true
 }))
 
@@ -25,6 +26,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api/users', usersRouter)
+app.use('/api/positions', positionsRouter)
 
 app.use(function (req, res, next) {
   next(createError(404))

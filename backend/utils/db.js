@@ -11,4 +11,18 @@ const userSchema = mongoose.Schema({
 })
 // 第二个users是 创建集合 的名字
 const Users = mongoose.model('users', userSchema)
+
+const positionSchema = mongoose.Schema({
+    city: String,
+    salary: String,
+    createTime: String,
+    companyName: String,
+    companyLogo: String,
+    positionName: String
+})
+
+const Positions = mongoose.model('position', positionSchema)
+
+
 exports.Users = Users
+exports.Positions = Positions

@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Signin from '../components/Signin.vue'
+import Home from '../components/Home'
+import User from '../view/User.vue'
+import Position from '../view/Position.vue'
 
 const routes = [
   {
@@ -8,9 +11,19 @@ const routes = [
     component: Signin
   },
   {
-    path: '/index/user',
+    path: '/index',
     name: 'User',
-    component: () => import('../components/User/User.vue')
+    component: Home,
+    children: [
+      {
+        path: 'user',
+        component: User
+      },
+      {
+        path: 'position',
+        component: Position
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)',

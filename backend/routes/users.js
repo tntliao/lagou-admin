@@ -10,4 +10,6 @@ router.post('/login', login)
 router.delete('/delete', auth, deleteUser)
 router.get('/exitlogin', auth, exitLogin)
 router.get('/isauth', isAuth)
+
+
 module.exports = router;

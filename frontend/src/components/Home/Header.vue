@@ -44,7 +44,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .header {
   height: 5rem;
   min-width: 1000px;

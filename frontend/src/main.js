@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import './assets/css/reset.css'
 
 axios.defaults.withCredentials = true
 
