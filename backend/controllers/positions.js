@@ -5,6 +5,7 @@ const addPosition = async (req, res, next) => {
     res.set('content-type', 'application/json')
     const result = await positionModel.addPosition({ ...req.body })
     if (result) {
+        process.socket.emit('message', 'ok')
         res.send({
             code: 1,
             message: '添加职位成功'
