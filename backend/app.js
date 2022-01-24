@@ -7,6 +7,7 @@ const cors = require('cors')
 
 const usersRouter = require('./routes/users')
 const positionsRouter = require('./routes/positions')
+const imagesRouter = require('./routes/images')
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api/users', usersRouter)
 app.use('/api/positions', positionsRouter)
+app.use('/images', imagesRouter)
 
 app.use(function (req, res, next) {
   next(createError(404))
@@ -40,5 +42,6 @@ app.use(function (err, req, res, next) {
   res.render('error')
 })
 
+process.env.PORT = 80
 
 module.exports = app

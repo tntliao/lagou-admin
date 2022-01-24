@@ -3,7 +3,7 @@ import Signin from '../components/Signin.vue'
 import Home from '../components/Home'
 import User from '../view/User.vue'
 import Position from '../view/Position.vue'
-
+import Upload from '../view/Upload.vue'
 const routes = [
   {
     path: '/login',
@@ -22,7 +22,11 @@ const routes = [
       {
         path: 'position',
         component: Position
-      }
+      },
+      {
+        path: 'upload',
+        component: Upload
+      },
     ]
   },
   {

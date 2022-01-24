@@ -1,9 +1,9 @@
 const positionModel = require('../models/position')
 
 const addPosition = async (req, res, next) => {
-    console.log(req.companyLogo);
+    const companyLogo = req.companyLogo
     res.set('content-type', 'application/json')
-    const result = await positionModel.addPosition({ ...req.body })
+    const result = await positionModel.addPosition({ ...req.body, companyLogo })
     if (result) {
         process.socket.emit('message', 'ok')
         res.send({

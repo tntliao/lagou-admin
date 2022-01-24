@@ -84,7 +84,7 @@ import { ElMessage } from "element-plus";
 import axios from "axios";
 import moment from "moment";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = "http://tntliao.cn";
 export default {
   name: "User",
   setup() {

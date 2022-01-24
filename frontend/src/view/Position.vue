@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <div class="left_title">
-            <span>名称</span>
+            <span>logo</span>
             <span>公司</span>
             <span>职位</span>
             <span>薪水</span>
@@ -19,6 +19,9 @@
       <div class="block">
         <div class="container">
           <div class="item" v-for="item in positionList.list" :key="item._id">
+            <p class="companyLogo">
+              <img :src="getCompanyLogo(item.companyLogo)" alt="" />
+            </p>
             <p class="companyName">{{ item.companyName }}</p>
             <p class="city">{{ item.city }}</p>
             <p class="positionName">{{ item.positionName }}</p>
@@ -41,7 +44,7 @@
         <el-pagination
           layout="prev, pager, next"
           :total="positionCountList.list.length"
-          :default-page-size="8"
+          :default-page-size="6"
           background
           @current-change="pageChange"
         >
@@ -75,6 +78,20 @@
         <el-form-item prop="city">
           <el-input v-model="fromData.city" placeholder="请输入城市" />
         </el-form-item>
+        <el-form-item>
+          <el-upload
+            class="upload-demo"
+            action=""
+            :limit="1"
+            :file-list="fileList"
+            :before-upload="uploadFile"
+          >
+            <el-button size="small" type="primary">Click to upload</el-button>
+            <template #tip>
+              <div class="el-upload__tip">jpg/jpeg/png/gif 200kb</div>
+            </template>
+          </el-upload>
+        </el-form-item>
       </el-form>
     </el-form>
 
@@ -92,7 +109,7 @@ import { reactive, ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = "http://tntliao.cn";
 export default {
   name: "Position",
   setup() {
@@ -110,6 +127,8 @@ export default {
     const positionCountList = reactive({ list: "" });
     //用户列表渲染数据
     const positionList = reactive({ list: "" });
+    //上传的图片
+    let fileList = reactive([]);
     /* ------------------------------------------------------------ */
     const success = (message) => {
       ElMessage({
@@ -168,31 +187,39 @@ export default {
 
     // 添加职位
     const addPosition = () => {
-      if (
-        fromData.city &&
-        fromData.salary &&
-        fromData.companyName &&
-        fromData.positionName
-      ) {
-        axios({
-          method: "post",
-          url: "/api/positions/add",
-          data: { ...fromData },
-        }).then((response) => {
-          if (response.data.code) {
-            getPositions();
-            success(response.data.message);
-            isShow.value = false;
-            fromData.city = "";
-            fromData.salary = "";
-            fromData.companyName = "";
-            fromData.positionName = "";
-          } else {
-            fail(response.data.message);
-          }
-        });
+      // 这个是有images数据的formdata
+      if (fileList.length > 0) {
+        const formdata = fileList[0].formdata;
+        if (
+          fromData.city &&
+          fromData.salary &&
+          fromData.companyName &&
+          fromData.positionName
+        ) {
+          Object.keys(fromData).forEach((item) => {
+            formdata.set(item, fromData[item]);
+          });
+          axios({
+            method: "post",
+            url: "/api/positions/add",
+            data: formdata,
+          }).then((response) => {
+            if (response.data.code) {
+              getPositions();
+              success(response.data.message);
+              isShow.value = false;
+              Object.keys(fromData).forEach((item) => {
+                fromData[item] = "";
+              });
+            } else {
+              fail(response.data.message);
+            }
+          });
+        } else {
+          fail("输入框内容不能为空");
+        }
       } else {
-        fail("输入框内容不能为空");
+        fail("请检查，某些内容为空");
       }
     };
     //删除职位
@@ -217,21 +244,30 @@ export default {
         url: "/api/positions/getlist",
       }).then((response) => {
         positionCountList.list = response.data || [];
-        positionList.list = positionCountList.list.slice(0, 8);
+        positionList.list = positionCountList.list.slice(0, 6);
       });
     };
     //页数发送改变
     const pageChange = (number) => {
       positionList.list = positionCountList.list.slice(
-        (number - 1) * 8,
-        number * 8
+        (number - 1) * 6,
+        number * 6
       );
     };
-
+    // 上传把信息储存好
     const uploadFile = (file) => {
-      console.log(file);
+      //上传之前清除上次的
+      fileList.splice(0, fileList.length);
+      const name = file.name;
+      const formdata = new FormData();
+      formdata.set("companyLogo", file);
+      fileList.push({ name, formdata });
+      return false;
     };
-
+    //拼接图片路径
+    const getCompanyLogo = (imgName) => {
+      return "http://tntliao.cn/uploads/" + imgName;
+    };
     /* ----------------------------------- hooks -------------------------------------- */
     onMounted(() => {
       getPositions();
@@ -247,6 +283,9 @@ export default {
       positionList,
       removePosition,
       pageChange,
+      uploadFile,
+      fileList,
+      getCompanyLogo,
     };
   },
 };
@@ -255,7 +294,7 @@ export default {
 <style lang="less" scoped>
 .right {
   width: 83rem;
-  min-width: 800px;
+  min-width: 895px;
   height: 100%;
   border: 1px solid #dcdfe6;
   border-top: none;
@@ -281,6 +320,7 @@ export default {
     }
     .container {
       width: 100%;
+      // min-width: 1200px;
       height: 31rem;
       margin-bottom: 1rem;
       .item {
@@ -292,6 +332,9 @@ export default {
         position: relative;
         p {
           min-width: 7rem;
+          img {
+            width: 4rem;
+          }
         }
         .item_right {
           position: absolute;

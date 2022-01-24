@@ -13,7 +13,7 @@ export default {
     axios({
       headers: { token },
       method: "get",
-      url: "http://localhost:3000/api/users/isauth",
+      url: "http://tntliao.cn/api/users/isauth",
     }).then((response) => {
       if (!response.data.code) router.replace("/login");
     });

@@ -27,7 +27,7 @@ export default {
   },
   setup() {
     const emailNum = ref(0);
-    const socket = io.connect("http://localhost:3000");
+    const socket = io.connect("http://tntliao.cn");
     socket.on("message", (msg) => {
       emailNum.value += 1;
     });
@@ -38,7 +38,7 @@ export default {
       axios({
         headers: { token },
         method: "get",
-        url: "http://localhost:3000/api/users/exitlogin",
+        url: "http://tntliao.cn/api/users/exitlogin",
       }).then((response) => {
         if (response.data.code) {
           router.push("/login");
@@ -67,7 +67,7 @@ export default {
 <style lang="less" scoped>
 .header {
   height: 5rem;
-  min-width: 1000px;
+  min-width: 1100px;
   background: rgb(255, 255, 255);
   border: 1px solid #dcdfe6;
   line-height: 5rem;

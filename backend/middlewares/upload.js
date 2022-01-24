@@ -47,14 +47,14 @@ const uploadMiddleware = (req, res, next) => {
                 code: 0,
                 message: '文件体积太大'
             })
-            return
+
         } else if (err) {
             res.send({
                 code: 0,
                 message: err.message
             })
-            return
         } else {
+            //传递给下一个中间件，传递filename过去
             req.companyLogo = filename
             next()
             /* res.send({

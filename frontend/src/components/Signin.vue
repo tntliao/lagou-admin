@@ -42,7 +42,7 @@ export default {
 
     const login = () => {
       axios
-        .post("http://localhost:3000/api/users/login", { ...signinInfo })
+        .post("http://tntliao.cn/api/users/login", { ...signinInfo })
         .then((response) => {
           if (response.data.code) {
             const token = response.headers["x-assess-token"];

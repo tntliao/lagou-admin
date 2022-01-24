@@ -7,29 +7,39 @@
       <el-menu-item index="2" @click="go('/index/position')">
         <el-icon><set-up /></el-icon>职位管理
       </el-menu-item>
+      <el-menu-item index="3" @click="go('/index/upload')">
+        <el-icon><circle-plus /></el-icon>添加职位
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
 import { useRoute, useRouter } from "vue-router";
-import { User, SetUp } from "@element-plus/icons";
+import { User, SetUp, CirclePlus } from "@element-plus/icons";
 import { ref } from "vue-demi";
 export default {
   name: "Left",
   components: {
     User,
     SetUp,
+    CirclePlus,
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
     const activeNum = ref();
-    const flag = /user$/.test(route.path);
-    if (flag) {
-      activeNum.value = "1";
-    } else {
-      activeNum.value = "2";
+    const path = route.path;
+    switch (path) {
+      case "/index/user":
+        activeNum.value = "1";
+        break;
+      case "/index/position":
+        activeNum.value = "2";
+        break;
+      case "/index/upload":
+        activeNum.value = "3";
+        break;
     }
     /* ----------------------------------------------------- */
     const go = (path) => {
